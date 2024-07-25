@@ -1,5 +1,6 @@
 from enum import Enum, auto
 import random
+import names
 
 class Status(Enum):
     ACTIVE = auto()
@@ -7,7 +8,7 @@ class Status(Enum):
     ALL_IN = auto()
 
 class Player:
-    def __init__(self, name, money):
+    def __init__(self, money):
         """
         Initializes a new instance of the Player class.
 
@@ -23,11 +24,76 @@ class Player:
         Returns:
             None
         """
-        self.name = name
-        self.cards = []
-        self.money = money
-        self.status = Status.ACTIVE
-        self.current_bet = 0
+        self._name = names.get_full_name()
+        self._cards = []
+        self._money = money
+        self._status = Status.ACTIVE
+        self._current_bet = 0
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def cards(self):
+        return self._cards
+    
+    @cards.setter
+    def cards(self, cards):
+        self._cards = cards
+
+    @property
+    def money(self):
+        return self._money
+
+    @money.setter
+    def money(self, amount):
+        self._money = amount
+
+    @property
+    def status(self):
+        return self._status
+
+    @property
+    def current_bet(self):
+        return self._current_bet
+
+    @current_bet.setter
+    def current_bet(self, amount):
+        self._current_bet = amount
+
+    def fold(self):
+        """
+        Sets the status of the player to FOLDED.
+
+        This function sets the `status` attribute of the `Player` object to `Status.FOLDED`.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
+        self.status = Status.FOLDED
+
+    def call(self, amount):
+        """
+        Decreases the player's money by the given amount and increases their current bet by the same amount.
+
+        Parameters:
+            amount (int): The amount of money to call.
+
+        Raises:
+            None.
+
+        Returns:
+            None.
+        """
+        if amount > self.money:
+            self.go_all_in()
+        else:
+            self.money -= amount
+            self.current_bet += amount
 
     def bet(self, amount):
         """
@@ -44,22 +110,8 @@ class Player:
         """
         if amount > self.money:
             raise ValueError("Cannot bet more money than the player has")
-        self.money -= amount
-        self.current_bet += amount
-
-    def fold(self):
-        """
-        Sets the status of the player to FOLDED.
-
-        This function sets the `status` attribute of the `Player` object to `Status.FOLDED`.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
-        self.status = Status.FOLDED
+        self._money -= amount
+        self._current_bet += amount
 
     def go_all_in(self):
         """
