@@ -119,3 +119,6 @@ class Table:
             card = self.deck.pop()
             player.cards.append(card)
 
+    def deal_to_all(self):
+        for player in self.players:
+            self.deal_to_player(player, 2)

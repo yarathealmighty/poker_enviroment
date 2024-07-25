@@ -7,8 +7,14 @@ class Status(Enum):
     FOLDED = auto()
     ALL_IN = auto()
 
+class Position(Enum):
+    SMALL_BLIND = auto()
+    BIG_BLIND = auto()
+    DEALER = auto()
+    BASIC = auto()
+
 class Player:
-    def __init__(self, money):
+    def __init__(self, money, name=names.get_full_name()):
         """
         Initializes a new instance of the Player class.
 
@@ -24,11 +30,12 @@ class Player:
         Returns:
             None
         """
-        self._name = names.get_full_name()
+        self._name = name
         self._cards = []
         self._money = money
         self._status = Status.ACTIVE
         self._current_bet = 0
+        self.position = Position.BASIC
 
     @property
     def name(self):
